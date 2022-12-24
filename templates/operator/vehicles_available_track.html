@@ -1,0 +1,47 @@
+{% extends 'base_operator.html' %}
+{% block content %}
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+
+    {% if vehicles_available %}
+         <!-- Main Content -->
+        <div id="content" style="position: relative">
+            <div style="position: absolute; top:0; right:0;z-index: 99; width: 270px;height: 200px;" >
+                <div class="bg-gray-400 p-2" style="border-radius: 0 10px 0 10px;">
+                    <p class="mb-2 text-gray-800">List all the available vehicles, more information plz click detailed page.</p>
+                </div>
+            </div>
+            <div id="mapid" class="operatorMap"></div>
+        </div>
+        <script>
+            var startPoint = [55.858, -4.259]
+            var myMap = L.map('mapid').setView(startPoint, 13);
+            // add a scala to the map
+            var scale = L.control.scale({maxWidth:200,metric:true,imperial:false}).addTo(myMap);
+            L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 18
+            }).addTo(myMap);
+
+        </script>
+        {% for vehicles in vehicles_available %}
+
+            <script>
+            L.marker([{{ vehicles.latitude }}, {{ vehicles.longitude }}]).addTo(myMap)
+                .bindPopup('<strong>Status:</strong> {{ vehicles.status }} <br><strong>Vehicle Type:</strong>{{ vehicles.type }}<br><strong>Current Location:</strong> {{ vehicles.locName }}<br><strong>Info: </strong><a href="{% url 'e_portal:operator_vehicle_detail' vehicles.id %}"> Detailed information </a>')
+                .openPopup();
+            </script>
+        {% endfor %}
+    {% else %}
+        <div class="container">
+            <!-- 404 Error Text -->
+            <div class="text-center">
+                <h2 class="m-lg-5" style="font-weight: bold; font-size: 50px">No vehicles Available</h2>
+                <p class="text-gray-500 mb-0">Plz handle the Unavailable vehicles asap...
+                    <a href="{% url 'e_portal:vehicles_deal' %}" style="text-decoration: none"> click me to the operation lists</a>
+            </div>
+
+        </div>
+    {% endif %}
+
+
+{% endblock %}

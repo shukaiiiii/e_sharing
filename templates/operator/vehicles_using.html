@@ -1,0 +1,64 @@
+{% extends 'base_operator.html' %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-warning">Occupied Vehicles</h6>
+            </div>
+        {% if vehicles_using %}
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable">
+                        <thead>
+                            <tr>
+                                <th>Vehicle Id</th>
+                                <th>Type</th>
+                                <th>Price(£/hour)</th>
+                                <th>Plate Num</th>
+                                <th>Location</th>
+                                <th>Rented By</th>
+                                <th>Operation</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>Vehicle Id</th>
+                                <th>Type</th>
+                                <th>Price(£/hour)</th>
+                                <th>Plate Num</th>
+                                <th>Location</th>
+                                <th>Rented By</th>
+                                <th>Operation</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                        {% for vehicles in vehicles_using %}
+                            <tr>
+                                <td>{{ vehicles.id }}</td>
+                                <td>{{ vehicles.price }}</td>
+                                <td>{{ vehicles.status }}</td>
+                                <td>{{ vehicles.plateNum }}</td>
+                                <td>{{ vehicles.locName }}</td>
+{#                                这里可能得涉及order里的内容#}
+                                <td>{{ vehicles.name_customer }}</td>
+                                <td><a class="btn btn-info" href="{% url 'e_portal:operator_vehicle_detail' vehicles.vid %}">Detail</a></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% else %}
+            <div class="container">
+                <!-- 404 Error Text -->
+                <div class="text-center">
+                    <h2 class="m-lg-5" style="font-weight: bold; font-size: 50px">No rental order now</h2>
+                    <p class="text-gray-500 mb-0">Try to find out reason?  <a href="{% url 'e_portal:vehicles_deal' %}" style="text-decoration: none">Go To Operation List</a></p>
+                </div>
+
+            </div>
+        {% endif %}
+        </div>
+    </div>
+
+{% endblock %}
